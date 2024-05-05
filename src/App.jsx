@@ -22,16 +22,15 @@ import Election from './components/election';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { useLocation } from 'react-router-dom';
-
 const App = () => {
   const location = useLocation();
   const isInsideProfile = location.pathname.startsWith('/profile');
-
+  const isInsideAdmin = location.pathname.startsWith('/admin') && !location.pathname.startsWith('/adminsignin');
 
   return (
     <>
- {!isInsideProfile && <Navbar />}
-      {!isInsideProfile && (
+      {!isInsideProfile && !isInsideAdmin && <Navbar />}
+      {!isInsideProfile && !isInsideAdmin && (
         <div className="max-w-7xl mx-auto pt-20 px-6">
           <Routes>
             <Route path="/" element={<Home1 />} />
@@ -46,14 +45,13 @@ const App = () => {
           <div className="App">
             <LeftNavbar className="LeftNavbar"/>
             <div className="MainContent">
-        
-            <Routes>
-              <Route path="home" element={<Home />} />
-              <Route path="/vote" element={<Vote />} />
-              <Route path="/candidate" element={<AddCandidate />} />
-              <Route path="/election" element={<Election />} />
-        </Routes>
-      </div>
+              <Routes>
+                <Route path="home" element={<Home />} />
+                <Route path="/vote" element={<Vote />} />
+                <Route path="/candidate" element={<AddCandidate />} />
+                <Route path="/election" element={<Election />} />
+              </Routes>
+            </div>
           </div>
         } />
       </Routes>
@@ -62,14 +60,13 @@ const App = () => {
           <div className="App">
             <AdminNavbar className="AdminNavbar"/>
             <div className="AdminContent">
-        
-            <Routes>
-              <Route path="home" element={<Home />} />
-              <Route path="/vote" element={<Vote />} />
-              <Route path="/candidate" element={<AddCandidate />} />
-              <Route path="/election" element={<Election />} />
-        </Routes>
-      </div>
+              <Routes>
+                <Route path="home" element={<Home />} />
+                {/* <Route path="/vote" element={<Vote />} /> */}
+                <Route path="/candidate" element={<AddCandidate />} />
+                <Route path="/election" element={<Election />} />
+              </Routes>
+            </div>
           </div>
         } />
       </Routes>

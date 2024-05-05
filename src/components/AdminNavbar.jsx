@@ -17,11 +17,11 @@ const Navbar = () => {
             </div>
       
             <ul>
-            <li><button className={`nav-button ${location.pathname === '/profile/home' ? 'active' : ''}`} onClick={() => navigate('/profile/home')}><FontAwesomeIcon icon={faHome} /><span> Home</span></button></li>
-                <li><button className={`nav-button ${location.pathname === '/profile/vote' ? 'active' : ''}`} onClick={() => navigate('/profile/vote')}><FontAwesomeIcon icon={faVoteYea} /><span> Vote</span></button></li>
-                <li><button className={`nav-button ${location.pathname === '/profile/election' ? 'active' : ''}`} onClick={() => navigate('/profile/election')}><FontAwesomeIcon icon={faVoteYea} /><span> Election</span></button></li>
+            <li><button className={`nav-button ${location.pathname === '/admin/home' ? 'active' : ''}`} onClick={() => navigate('/admin/home')}><FontAwesomeIcon icon={faHome} /><span> Home</span></button></li>
+                {/* <li><button className={`nav-button ${location.pathname === '/admin/vote' ? 'active' : ''}`} onClick={() => navigate('/admin/vote')}><FontAwesomeIcon icon={faVoteYea} /><span> Vote</span></button></li> */}
+                <li><button className={`nav-button ${location.pathname === '/admin/election' ? 'active' : ''}`} onClick={() => navigate('/admin/election')}><FontAwesomeIcon icon={faVoteYea} /><span> Election</span></button></li>
               
-                <li><button className={`nav-button ${location.pathname === '/profile/candidate' ? 'active' : ''}`} onClick={() => navigate('/profile/candidate')}><FontAwesomeIcon icon={faPlus} /><span> Add Candidate</span></button></li>
+                <li><button className={`nav-button ${location.pathname === '/admin/candidate' ? 'active' : ''}`} onClick={() => navigate('/admin/candidate')}><FontAwesomeIcon icon={faPlus} /><span> Add Candidate</span></button></li>
                 <li><button><FontAwesomeIcon icon={faPoll} /><span> Results</span></button></li>
                 <li><button><FontAwesomeIcon icon={faInfoCircle} /><span> Help</span></button></li>
                 {/* <li><button><FontAwesomeIcon icon={faSignOutAlt} /><span> Log out</span></button></li> */}
