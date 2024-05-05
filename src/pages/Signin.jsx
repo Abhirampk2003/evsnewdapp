@@ -1,12 +1,14 @@
-
 import React, { useState } from 'react';
 import trees from '../assets/logo.png';
 import supabase from '../../supaBase';
 import { useNavigate } from 'react-router-dom';
 
 const Signin = () => {
-  const [name, setName] = useState('');
+  const [Fname, setFName] = useState('');
+  const [Lname, setLName] = useState('');
   const [aadhar, setAadharNumber] = useState('');
+  const [district, setDistrict] = useState('');
+
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -14,22 +16,38 @@ const Signin = () => {
 
     try {
       
-      const { data, error } = await supabase.from('election').insert([
-        { name, aadhar }
-      ]);
+      const { data, error } = await supabase.
+        from('database_voters').
+        select().
+        eq('First Name',Fname).
+        eq('Last Name',Lname).
+        eq('Adhar Number',aadhar).
+        single();
       
+      const district = data['District']
+      console.log(district)
+      setDistrict(district)
+
+
       if (error) {
         throw error;
       }
 
-      console.log('User data inserted:', data);
-      // Optionally, you can navigate to another page after successful insertion
+      if (!data) {
+        // If the user does not exist, display a message
+        console.log('No voter registered with the provided name and Aadhar number');
+        return;
+      }
+
+      console.log('User data found:', data);
+      // If the user exists, navigate to the /profile page
+      localStorage.setItem('user', JSON.stringify({ Fname,Lname, aadhar }));
+      navigate(`/profile/vote?district=${district}`);
+
     } catch (error) {
-      console.error('Error inserting user data:', error.message);
+      console.error('Error retrieving user data:', error.message);
     }
 
-    localStorage.setItem('user', JSON.stringify({ name, aadhar }));
-    navigate('/profile/home');
   };
 
   return (
@@ -45,9 +63,16 @@ const Signin = () => {
               <input
                 className='border p-2 mb-4 w-full'
                 type="text"
-                placeholder='NAME'
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                placeholder='First Name'
+                value={Fname}
+                onChange={(e) => setFName(e.target.value)}
+              />
+               <input
+                className='border p-2 mb-4 w-full'
+                type="text"
+                placeholder='Last Name'
+                value={Lname}
+                onChange={(e) => setLName(e.target.value)}
               />
               <input
                 className='border p-2 mb-4 w-full'
@@ -66,4 +91,3 @@ const Signin = () => {
 }
 
 export default Signin;
-
