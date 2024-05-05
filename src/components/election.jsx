@@ -4,44 +4,67 @@ import web3 from "../../ethereum/web3.js";
 import supabase from "../../supaBase";
 import ballot from '../../ethereum/ballot'
 
+// import TimePicker from 'react-time-picker';
+// import './home.css'; 
+const TimePicker = ({ label, value, onChange }) => {
+    const hours = [...Array(12).keys()].map(i => i + 1);
+    const minutes = ['00', '15', '30', '45'];
+    const amPm = ['AM', 'PM'];
+  
+    const [hour, minute, period] = value.split(/[:\s]/);
+  
+    const handleHourChange = (e) => {
+      onChange(`${e.target.value}:${minute} ${period}`);
+    };
+  
+    const handleMinuteChange = (e) => {
+      onChange(`${hour}:${e.target.value} ${period}`);
+    };
+  
+    const handlePeriodChange = (e) => {
+      onChange(`${hour}:${minute} ${e.target.value}`);
+    };
+  
+    return (
+      <div className="flex items-center space-x-2">
+        <label className="block text-white">{label}</label>
+        <select value={hour} onChange={handleHourChange} className="px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200">
+          {hours.map((hour) => (
+            <option key={hour} value={hour}>
+              {hour}
+            </option>
+          ))}
+        </select>
+        <span>:</span>
+        <select value={minute} onChange={handleMinuteChange} className="px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200">
+          {minutes.map((minute) => (
+            <option key={minute} value={minute}>
+              {minute}
+            </option>
+          ))}
+        </select>
+        <select value={period} onChange={handlePeriodChange} className="px-2 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200">
+          {amPm.map((period) => (
+            <option key={period} value={period}>
+              {period}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  };
 const StartElection = () => {
     const [electionAddresses, setElectionAddresses] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
+    // const [countdown, setCountdown] = useState(10); // 10 seconds countdown
     const [showNotifyPopup, setShowNotifyPopup] = useState(false);
-    const [countdown, setCountdown] = useState(1 * 10); // countdown in seconds
-
-    const startElection = async(event) => {
-        event.preventDefault();
+    const [countdown, setCountdown] = useState(1 * 10);
+    const [startDate, setStartDate] = useState('');
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
+    const startElection = () => {
         setShowPopup(true);
-        try {
-            const electionAddresses = await instance.methods.getDeployedBallots().call();
-            setElectionAddresses(electionAddresses);
-            console.log(electionAddresses)
-            const ballotAddresses = []
-            for (const address of electionAddresses) {
-                const balloAddress = await ballot(address);
-                ballotAddresses.push(balloAddress)
-            }
-            for (const addresses of ballotAddresses) {
-                const accounts = await web3.eth.getAccounts();
-                const start = await addresses.methods.electionStarted().call()
-                console.log(addresses)
-                const owner = await addresses.methods.manager().call()
-                if(owner==accounts[0]&&start==false) {
-                    await addresses.methods.startVoting(5).send({
-                        from: owner
-                    })
-                    const start = await addresses.methods.electionStarted().call()
-                    console.log(start)
-                }
-                else {
-                    console.log("Election already started or only owner can start voting")
-                }
-            }
-        } catch (error) {
-            console.log(error)
-        }
-        let timer = setInterval(() => {
+        const timer = setInterval(() => {
             setCountdown(prevCountdown => {
                 if (prevCountdown <= 1) {
                     clearInterval(timer);
@@ -53,23 +76,38 @@ const StartElection = () => {
             });
         }, 1000); // update every second
     }
-
-    const notifyVoters = () => {
-        console.log("Voters notified");
-        setShowNotifyPopup(true);
-    }
-
     const closePopup = () => {
         setShowPopup(false);
+        setCountdown(10); // Reset the countdown
+    };
+    const notifyVoters = () => {
+        setShowNotifyPopup(true);
+    };
+
+    const closeNotifyPopup = () => {
         setShowNotifyPopup(false);
-        setCountdown(1 * 10); // reset countdown
-    }
+        
+    };
 
-    const minutes = Math.floor(countdown / 60);
-    const seconds = countdown % 60;
+    const [showSentPopup, setShowSentPopup] = useState(false);
+    const sendNotification = (event) => {
+        event.preventDefault();
+      
+        console.log(`Election starts: ${startDate} ${startTime}`);
+        console.log(`Election ends: ${startDate} ${endTime}`);
+        setShowSentPopup(true);
+    };
 
+    const closeSentPopup = () => {
+        setShowSentPopup(false);
+        setShowNotifyPopup(false);
+    };
+
+    
+    
     return (
-        <div className={`flex flex-col items-center justify-center min-h-screen bg-custom-gray text-white p-4 ${showPopup ? 'backdrop-blur-md' : ''}`}>
+        <div className={`relative flex flex-col items-center justify-center min-h-screen bg-custom-gray text-white p-4 ${showPopup ? 'backdrop-blur-lg' : ''}`}>
+            {/* ${showPopup ? 'backdrop-blur-md' : ''} */}
             <header className="mb-8 text-center">
                 <h1 className="text-4xl font-bold mb-2">Election Dashboard</h1>
                 <p className="text-xl">Use the buttons below to start the election and notify voters.</p>
@@ -86,32 +124,50 @@ const StartElection = () => {
             >
                 Notify Voters
             </button>
-            
             {showPopup && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md">
-                <div className="relative p-8 bg-blue-200 rounded text-black shadow-lg">
-                <button onClick={closePopup} className="absolute top-2 right-2 text-lg font-bold">&times;</button>
-                {countdown > 0 ? (
-                    <>
-                        <h2 className="text-2xl mb-4 text-center">Election Starting Soon</h2>
-                        <p className="text-center">The election will start in {minutes} minutes and {seconds} seconds.</p>
-                    </>
-                ) : (
-                    <h2 className="text-2xl mb-4 text-center">Election Has Started</h2>
-                )}
-                </div>
-                </div>
-)}
-             {showNotifyPopup && (
-            <div className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-md}`}>
-            <div className="relative p-8 bg-blue-200 rounded text-black shadow-lg">
-                <button onClick={closePopup} className="absolute top-2 right-2 text-lg font-bold">&times;</button>
-                    <h2 className="text-2xl mb-4 text-center">Notification Has been Sent to Voters</h2>
-                </div>
-            </div>
-        )}
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg z-10">
+        <div className="bg-gray-700 rounded-lg shadow-lg p-6 m-4 w-1/3 text-center z-20">
+            <button onClick={closePopup} className="float-right text-white hover:text-gray-200">X</button>
+            {countdown > 0 ? (
+                <p>The election will start in {countdown} seconds...</p>
+            ) : (
+                <p>The election has started!</p>
+            )}
         </div>
-        
+    </div>
+)}  
+   {showNotifyPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg z-10">
+            <div className="bg-gray-700 rounded-lg shadow-lg p-6 m-4 w-1/3 text-center z-20">
+                <button onClick={closeNotifyPopup} className="float-right text-white hover:text-gray-200">X</button>
+                <form onSubmit={sendNotification} className="space-y-4 text-white">
+                    <div className="flex space-x-4 items-center">
+                        <label className="block flex-1">
+                            Date:
+                            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} required className="w-full px-4 py-2 mt-2 border rounded-lg focus:ring-2 focus:ring-blue-200 focus:outline-none" />
+                        </label>
+                    </div>
+                    <div className="flex space-x-8 items-center">
+                        <TimePicker label="Start Time:" value={startTime} onChange={setStartTime} />
+                        <TimePicker label="End Time:" value={endTime} onChange={setEndTime} />
+                    </div>
+                    <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors duration-300">
+                        Send
+                    </button>
+                </form>
+                    </div>
+                </div>
+            )}
+             {showSentPopup && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg z-10">
+                    <div className="bg-gray-700 rounded-lg shadow-lg p-6 m-4 w-1/3 text-center z-20">
+                        <button onClick={closeSentPopup} className="float-right text-white hover:text-gray-200">X</button>
+                        <p>Notification is sent to all Voters</p>
+                    </div>
+                </div>
+                )}
+
+        </div>
     );
 }
 
