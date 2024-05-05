@@ -1,33 +1,27 @@
 import React, { useState } from 'react';
+import instance from '../../ethereum/election_creation';
+import web3 from '../../ethereum/web3';
+import supabase from '../../supaBase'
+import ballot from '../../ethereum/ballot'
+// import {firebase} from '../../src/firebase'
+// import {addDoc,collection} from '@firebase/firestore'
 // import './candidate.css'; // Import your CSS file
 
-const ElectionSelector = () => {
-  return (
-    <div className="flex justify-between w-full p-2.5 bg-gray-200 rounded-md">
-      <label>
-        Election:
-        <select name="election">
-          <option value="">Select...</option>
-          <option value="election1">Election 1</option>
-          <option value="election2">Election 2</option>
-        </select>
-      </label>
-    </div>
-  );
-};
 
 const CandidateForm = () => {
   const [candidate, setCandidate] = useState({
-    name: '',
     image: null,
     dob: '',
-    party: '',
     state: '',
-    district: '',
     constituency: '',
     phone: '',
     description: ''
   });
+  
+  const [electionAddresses, setElectionAddresses] = useState([]);
+  const [candidates, setCandidates] = useState([[]]);
+  const [party, setParty] = useState([[]]);
+  const [district, setDistrict] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,8 +32,40 @@ const CandidateForm = () => {
     setCandidate(prevState => ({ ...prevState, image: e.target.files[0] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    setCandidates([[]]);
+    setParty([[]]);
+    setDistrict("");
+
+    try {
+      const accounts = await web3.eth.getAccounts();
+      console.log(accounts)
+      await instance.methods.startElection([[candidates]],[[party]],[district]).send({
+        from: accounts[0]
+      });
+      const deployed = await instance.methods.getDeployedBallots().call();
+      console.log(deployed);
+
+      const {data,error} = await supabase.from("candidates").insert([
+        {candidate: candidates,party: party,district: district}
+      ]);
+      if (error) {
+        throw error;
+      }
+
+      setCandidate({
+        image: null,
+        dob: '',
+        state: '',
+        constituency: '',
+        phone: '',
+        description: ''
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
     // Submit the form
   };
 
@@ -47,7 +73,7 @@ const CandidateForm = () => {
     <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center space-y-2.5 overflow-y-auto p-2.5 w-full max-w-xl mx-auto bg-gray-800 rounded-lg shadow-md">
     <label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
       Name:
-      <input className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" type="text" name="name" value={candidate.name} onChange={handleChange} />
+      <input className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" type="text" name="name" value={candidates} onChange={(event)=>setCandidates(event.target.value)} />
     </label>
     <label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
       Image:
@@ -59,7 +85,7 @@ const CandidateForm = () => {
     </label>
     <label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
       Party:
-      <select className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" name="party" value={candidate.party} onChange={handleChange}>
+      <select className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" name="party" value={party} onChange={(event)=> setParty(event.target.value)}>
         <option value="">Select...</option>
           {/* Add your parties here */}
           <option value="party1">Party 1</option>
@@ -77,7 +103,7 @@ const CandidateForm = () => {
       </label>
       <label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
   District:
-  <select className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" name="district" value={candidate.district} onChange={handleChange}>
+  <select className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" name="district" value={district} onChange={(event)=> setDistrict(event.target.value)}>
     <option value="">Select...</option>
     {/* Add your districts here */}
     <option value="district1">District 1</option>
