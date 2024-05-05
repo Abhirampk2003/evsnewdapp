@@ -88,8 +88,9 @@ const CandidateForm = () => {
       <select className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" name="party" value={party} onChange={(event)=> setParty(event.target.value)}>
         <option value="">Select...</option>
           {/* Add your parties here */}
-          <option value="party1">Party 1</option>
-          <option value="party2">Party 2</option>
+          <option value="LDF">LDF</option>
+          <option value="UDF">UDF</option>
+          <option value="BJP">BJP</option>
         </select>
       </label>
       <label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
@@ -97,8 +98,8 @@ const CandidateForm = () => {
         <select className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" name="state" value={candidate.state} onChange={handleChange}>
           <option value="">Select...</option>
           {/* Add your states here */}
-          <option value="state1">State 1</option>
-          <option value="state2">State 2</option>
+          <option value="state1">KERALA</option>
+          
         </select>
       </label>
       <label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
@@ -106,19 +107,30 @@ const CandidateForm = () => {
   <select className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" name="district" value={district} onChange={(event)=> setDistrict(event.target.value)}>
     <option value="">Select...</option>
     {/* Add your districts here */}
-    <option value="district1">District 1</option>
-    <option value="district2">District 2</option>
+    <option value="Alappuzha">Alappuzha</option>
+    <option value="Ernakulam">Ernakulam</option>
+    <option value="Idukki">Idukki</option>
+    <option value="Kannur">Kannur</option>
+    <option value="Kasaragod">Kasaragod</option>
+    <option value="Kollam">Kollam</option>
+    <option value="Kottayam">Kottayam</option>
+    <option value="Kozhikode">Kozhikode</option>
+    <option value="Malappuram">Malappuram</option>
+    <option value="Palakkad">Palakkad</option>
+    <option value="Pathanamthitta">Pathanamthitta</option>
+    <option value="Thiruvananthapuram">Thiruvananthapuram</option>
+    <option value="Thrissur">Thrissur</option>
+    <option value="Wayanad">Wayanad</option>
   </select>
 </label>
-<label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
+{/* <label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
   Constituency:
   <select className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" name="constituency" value={candidate.constituency} onChange={handleChange}>
     <option value="">Select...</option>
-    {/* Add your constituencies here */}
     <option value="constituency1">Constituency 1</option>
     <option value="constituency2">Constituency 2</option>
   </select>
-</label>
+</label> */}
 <label className="flex flex-row justify-between items-center w-full p-2.5 text-white font-bold">
   Phone Number:
   <input className="w-96 p-2.5 bg-black border border-gray-300 font-bold text-white rounded-md" type="text" name="phone" value={candidate.phone} onChange={handleChange} />
@@ -150,3 +162,7 @@ const AddCandidate = () => (
 );
 
 export default AddCandidate;
+
+
+
+

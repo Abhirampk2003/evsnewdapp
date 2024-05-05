@@ -5,7 +5,7 @@ import Electioncreation from '../ethereum/build/ElectionCreation.json';
 //const web3 = new Web3("https://sepolia.infura.io/v3/840152b62f154721b04b828a8edcb024")
 const instance = new web3.eth.Contract(
     Electioncreation.abi,
-    "0x74FCF7b8AD47a5C95C9a3e030658E62A1e63F6Ac"
+    "0x79d22D851d99A6700AFa8fd530abA6894c683D13"
 );
 //console.log(instance);
 
