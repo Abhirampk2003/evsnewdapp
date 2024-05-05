@@ -1,0 +1,78 @@
+.navbar {
+    width: 250px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     
+     border-radius: 20px;
+     margin: 20px;
+     position: fixed;
+     width: 300px;
+     height: calc(100vh - 40px);
+     z-index: 1;
+     background-color: #1b1a1a;
+     border: 2px solid red;
+     padding: 20px; 
+   }
+   .Logo {
+     
+     display: flex;
+     align-items: center; 
+     justify-content: center;
+     margin-bottom: 20px;/* This will vertically center the text with the logo */
+   }
+   
+   .Logo img {
+     width: 100px; /* Adjust as needed */
+     height: 50px; /* Adjust as needed */
+     margin-right: 10px; /* This will add some space between the logo and the text */
+   }
+   
+   .Logo span {
+     font-size: 20px; /* Adjust as needed */
+   }
+   
+   .navbar ul {
+     /* text-align: center; */
+     list-style-type: none;
+     padding: 0;
+   }
+   
+   .navbar li {
+     padding: 10px 0;
+     margin-bottom: 10px;
+   }
+ 
+ .navbar ul li button {
+     /* background: rgb(87, 84, 84); */
+     border-radius: 20px;
+     width: 280px;
+     height: 40px;
+     padding: 20px;
+     border: none;
+     color: inherit;
+     cursor: pointer;
+     outline: inherit;
+     font-size: 1em;
+     display: flex;
+     align-items: center;
+   }
+   
+   .navbar ul li button span {
+     margin-left: 10px; /* Adjust as needed */
+   }
+   
+   .navbar ul li button:hover {
+     color: #ff0000; /* Adjust as needed */
+   }
+   .navbar ul li button:hover {
+     color: #ff0000;
+     transition: color 0.3s ease; /* Add this line to animate the color change */
+   }
+ 
+   .navbar ul li button.active {
+     background-color: #007BFF; /* Change to your preferred color */
+     color: white;
+     border: 2px solid #0056b3;
+     box-shadow: 0 0 10px #007BFF;
+   }

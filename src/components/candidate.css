@@ -1,0 +1,73 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .election-selector {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+  }
+  body {
+    background-color: #f4f4f4;
+    font-family: Arial, sans-serif;
+  }
+  
+  .candidate-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    overflow-y: auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #313030;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .candidate-form label {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    color: #ffffff;
+    font-weight: bold;
+  }
+  
+  .candidate-form label > input,
+  .candidate-form label > select,
+  .candidate-form label > textarea {
+    width: 70%;
+    padding: 10px;
+    background-color: black;
+    border: 1px solid #ddd;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 5px;
+  }
+  
+  .candidate-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .candidate-form button:hover {
+    background-color: #0056b3;
+  }
