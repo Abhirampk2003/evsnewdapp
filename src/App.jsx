@@ -5,7 +5,9 @@ import Signin from "./pages/Signin"
 import Home1 from "./pages/Home1"
 //import Profile from "./pages/profile"
 import AdminSignin from "./pages/adminsignin"
-import Admin from "./pages/admin"
+// import Admin from "./pages/admin"
+
+// import Test from './components/Test';
 
 
 
@@ -17,8 +19,8 @@ import AdminNavbar from './components/AdminNavbar';
  import Vote from './components/Vote';
 import AddCandidate from './components/AddCandidate';
 import Election from './components/election';
-// import Results from './components/Results';
-// import Help from './components/Help';
+import Results from './components/Results';
+import Help from './components/Help';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import { useLocation } from 'react-router-dom';
@@ -50,6 +52,8 @@ const App = () => {
                 <Route path="/vote" element={<Vote />} />
                 <Route path="/candidate" element={<AddCandidate />} />
                 <Route path="/election" element={<Election />} />
+                <Route path="/help" element={<Help />} />
+                <Route path="result" element={<Results />} />
               </Routes>
             </div>
           </div>
@@ -65,6 +69,7 @@ const App = () => {
                 {/* <Route path="/vote" element={<Vote />} /> */}
                 <Route path="/candidate" element={<AddCandidate />} />
                 <Route path="/election" element={<Election />} />
+                <Route path="/help" element={<Help />} />
               </Routes>
             </div>
           </div>
