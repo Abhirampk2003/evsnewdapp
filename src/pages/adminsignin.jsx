@@ -36,7 +36,7 @@ const AdminSignin = () => {
               console.log("admin",admin)
               localStorage.setItem('admin', JSON.stringify({admin , adminpass}));
               // Redirect to the admin page
-              navigate('/admin');
+              navigate('/admin/home');
               return;
           }
           
