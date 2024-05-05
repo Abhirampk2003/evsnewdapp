@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import instance from "../../ethereum/election_creation";
+import web3 from "../../ethereum/web3.js";
+import supabase from "../../supaBase";
+import ballot from '../../ethereum/ballot'
 // import TimePicker from 'react-time-picker';
 // import './home.css'; 
 const TimePicker = ({ label, value, onChange }) => {
@@ -55,19 +59,52 @@ const StartElection = () => {
     const [startDate, setStartDate] = useState('');
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');
-    const startElection = () => {
+
+    const [electionAddresses, setElectionAddresses] = useState([]);
+    
+    const startElection = async (event) => { // Add async keyword here
+        event.preventDefault();
         setShowPopup(true);
-        const timer = setInterval(() => {
+        try {
+            const electionAddresses = await instance.methods.getDeployedBallots().call();
+            setElectionAddresses(electionAddresses);
+            console.log(electionAddresses)
+            const ballotAddresses = []
+            for (const address of electionAddresses) {
+                const balloAddress = await ballot(address);
+                ballotAddresses.push(balloAddress)
+            }
+            for (const addresses of ballotAddresses) {
+                const accounts = await web3.eth.getAccounts();
+                const start = await addresses.methods.electionStarted().call()
+                console.log(addresses)
+                const owner = await addresses.methods.manager().call()
+                if(owner==accounts[0]&&start==false) {
+                    await addresses.methods.startVoting(5).send({
+                        from: owner
+                    })
+                    const start = await addresses.methods.electionStarted().call()
+                    console.log(start)
+                }
+                else {
+                    console.log("Election already started or only owner can start voting")
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        let timer = setInterval(() => {
             setCountdown(prevCountdown => {
                 if (prevCountdown <= 1) {
                     clearInterval(timer);
+                    console.log("Election started");
                     return 0;
+                } else {
+                    return prevCountdown - 1;
                 }
-                return prevCountdown - 1;
             });
-        }, 1000);
-    };
-
+        }, 1000); // update every second
+    }
     const closePopup = () => {
         setShowPopup(false);
         setCountdown(10); // Reset the countdown
