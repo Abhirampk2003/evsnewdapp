@@ -7,9 +7,9 @@ const evs = require("./build/Electioncreation.json");
 // import evs from "./build/Electioncreation.json";
 
 const provider = new HDWalletProvider(
-  "inspire faculty river blade pole into note sand awful display pledge clap",
+  "learn game trophy unknown surge one tenant speak dress excite erode pattern",
   // remember to change this to your own phrase!
-  "https://sepolia.infura.io/v3/fd4bf29c6e43458a9f1c75ca6d8179b7"
+  "https://sepolia.infura.io/v3/840152b62f154721b04b828a8edcb024"
   // remember to change this to your own endpoint!
 );
 const web3 = new Web3(provider);

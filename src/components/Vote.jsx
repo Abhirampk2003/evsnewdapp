@@ -86,6 +86,7 @@ const Vote = () => {
     const districtParam = searchParams.get('district');
     if (districtParam) {
       setDistrict(districtParam);
+      localStorage.setItem('district', districtParam);
     }
   }, [location.search]);
   const [candidates, setCandidates] = useState([
@@ -199,8 +200,6 @@ const Vote = () => {
 
       const electionStart = await ballots.methods.electionStarted().call()
       console.log(electionStart)
-      
-
  
       // await ballots.methods.vote(index).send({
       //   from: accounts[0],
@@ -208,15 +207,13 @@ const Vote = () => {
       //   // Sending 0.01 ether with the transaction
       // });
       if(electionStart)
-   {   await ballots.methods.vote(index1).send({
+      { 
+        await ballots.methods.vote(0).send({
         from: accounts[0],
         //value: web3.utils.toWei('0.00000001', 'ether'), // Sending 0.00000001 ether with the transaction
         gas: 1000000, // Specify the gas limit here
-      });}
-
-  
-
-      
+      })
+      ;}
       // Update the vote count locally
       setCandidates((prevCandidates) =>
         prevCandidates.map((candidate, i) =>
@@ -227,6 +224,22 @@ const Vote = () => {
       console.error('Error while voting:', error);
     }
   };
+
+//   const voteCount = async(event)=> {
+//     event.preventDefault();
+//     const deployedballots = await instance.methods.deployedBallots(2).call()
+//     console.log("deployedBallots",deployedballots)
+//     const ballots = await ballot(deployedballots) 
+//     const candidates = await ballots.methods.candidates(0).call();
+//     console.log(candidates)
+//     if(candidates.creationDate < candidates.expirationDate)
+//     {
+//         const voteCount = await ballots.methods.getVoteCount(0).call({
+//           from: accounts[0]
+//         })
+//         const votecount1 = Number(voteCount)
+//   }
+// }
 
   return (
     <div className="container mx-auto w-full flex justify-start items-center flex-col m-10 rounded-3xl">
@@ -247,6 +260,9 @@ const Vote = () => {
           <button className="px-5 py-2.5 bg-blue-600 text-white border-0 rounded cursor-pointer hover:bg-blue-700" onClick={() => vote(index)}>
             Vote
           </button>
+          {/* <button className="px-5 py-2.5 bg-blue-600 text-white border-0 rounded cursor-pointer hover:bg-blue-700" onClick={(event) => voteCount(event)}>
+            Vote Count
+          </button> */}
           {/* <span className="text-white">{candidate.votes}</span> */}
         </div>
       );
@@ -259,6 +275,7 @@ const Vote = () => {
     </div>
   );
 };
+
 
 export default Vote;
 
